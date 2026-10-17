@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#0a0a0a">
+<title>منوی کافه</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg-2: #141414;
+  --card: #1a1a1a;
+  --border: #262626;
+  --gold: #f5b301;
+  --gold-soft: #fbbf24;
+  --text: #f5f5f5;
+  --muted: #8a8a8a;
+  --danger: #ef4444;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: Vazirmatn, Tahoma, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 100px;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23f5b301' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M40 0 L48 32 L80 40 L48 48 L40 80 L32 48 L0 40 L32 32 Z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10,10,10,.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+  background: var(--bg-2); overflow: hidden;
+}
+.logo img { width: 100%; height: 100%; object-fit: cover; }
+.brand-text h1 { font-size: 17px; margin: 0; color: var(--gold); }
+.brand-text p { font-size: 11px; margin: 2px 0 0; color: var(--muted); }
+.table-badge {
+  background: var(--gold); color: #000; padding: 6px 14px;
+  border-radius: 20px; font-size: 13px; font-weight: bold;
+}
+.tabs {
+  position: sticky; top: 73px; z-index: 40;
+  background: rgba(10,10,10,.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; white-space: nowrap;
+  padding: 12px 16px; scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  display: inline-block; padding: 8px 18px; margin-left: 8px;
+  border-radius: 30px; border: 1px solid var(--border);
+  background: var(--bg-2); color: var(--muted);
+  font-size: 13px; cursor: pointer; font-family: inherit;
+  transition: all .2s;
+}
+.tab.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: bold; }
+.grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 12px; padding: 16px; position: relative; z-index: 1;
+  max-width: 1100px; margin: 0 auto;
+}
+@media (min-width: 640px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 900px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+.card {
+  background: var(--card); border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--border); cursor: pointer;
+  transition: transform .15s;
+}
+.card:active { transform: scale(.97); }
+.card .img-wrap {
+  width: 100%; aspect-ratio: 1;
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  position: relative; overflow: hidden;
+}
+.card .img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card .img-wrap .ph {
+  width: 100%; height: 100%; display: flex; align-items: center;
+  justify-content: center; font-size: 36px; color: var(--gold); opacity: .3;
+}
+.card .info { padding: 10px 12px 12px; }
+.card h3 { font-size: 13px; margin: 0 0 4px; font-weight: 600; }
+.card .desc {
+  font-size: 10px; color: var(--muted); margin: 0 0 8px;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;
+  overflow: hidden; min-height: 14px;
+}
+.card .bottom { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card .price { color: var(--gold); font-size: 12px; font-weight: bold; }
+.card .price small { font-size: 9px; color: var(--muted); font-weight: normal; }
+.card .add {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 0; background: var(--gold); color: #000;
+  font-size: 18px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-weight: bold;
+}
+.card.unavailable { opacity: .45; }
+.card.unavailable .add { pointer-events: none; background: var(--muted); }
+.badge-unavail {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--danger); color: #fff;
+  font-size: 10px; padding: 3px 8px; border-radius: 10px;
+}
+.empty { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1/-1; }
+
+/* Floating cart button */
+.cart-fab {
+  position: fixed; bottom: 20px; left: 20px;
+  background: var(--gold); color: #000;
+  border: 0; border-radius: 50px;
+  padding: 14px 22px; font-size: 14px; font-weight: bold;
+  cursor: pointer; display: none; align-items: center; gap: 8px;
+  box-shadow: 0 6px 24px rgba(245,179,1,.4);
+  z-index: 60; font-family: inherit;
+}
+.cart-fab.show { display: flex; }
+.cart-fab .count {
+  background: #000; color: var(--gold);
+  border-radius: 50%; width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+
+/* Sheet */
+.sheet-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7);
+  z-index: 90; opacity: 0; pointer-events: none;
+  transition: opacity .2s; backdrop-filter: blur(4px);
+}
+.sheet-bg.open { opacity: 1; pointer-events: auto; }
+.sheet {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--bg-2); border-radius: 20px 20px 0 0;
+  z-index: 100; max-height: 90vh; overflow-y: auto;
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
+  padding: 8px 0 20px;
+  border-top: 1px solid var(--border);
+}
+.sheet.open { transform: translateY(0); }
+.sheet-handle {
+  width: 40px; height: 4px; background: var(--border);
+  border-radius: 2px; margin: 0 auto 12px;
+}
+.sheet-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px 12px; border-bottom: 1px solid var(--border);
+}
+.sheet-header h2 { margin: 0; font-size: 16px; }
+.close-btn {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); width: 32px; height: 32px;
+  border-radius: 50%; cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+}
+.sheet-body { padding: 16px 18px; }
+
+/* Gallery */
+.gallery {
+  display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+  gap: 8px; padding-bottom: 8px; margin-bottom: 14px;
+  scrollbar-width: none;
+}
+.gallery::-webkit-scrollbar { display: none; }
+.gallery img {
+  height: 200px; min-width: 200px; object-fit: cover;
+  border-radius: 12px; scroll-snap-align: start;
+  border: 1px solid var(--border);
+}
+.product-name { font-size: 20px; margin: 0 0 6px; color: var(--gold); }
+.product-desc { color: var(--muted); font-size: 14px; line-height: 1.8; margin: 0 0 16px; }
+.product-price { font-size: 18px; color: var(--gold); font-weight: bold; margin-bottom: 16px; }
+.qty-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; padding: 12px; background: var(--card);
+  border-radius: 12px; border: 1px solid var(--border);
+}
+.qty-ctrl { display: flex; align-items: center; gap: 14px; }
+.qty-ctrl button {
+  width: 36px; height: 36px; border-radius: 50%; border: 0;
+  background: var(--gold); color: #000; font-size: 20px;
+  cursor: pointer; font-weight: bold;
+}
+.qty-ctrl span { font-size: 18px; min-width: 30px; text-align: center; }
+.btn-primary {
+  width: 100%; padding: 14px; border: 0; border-radius: 12px;
+  background: var(--gold); color: #000; font-size: 15px;
+  font-weight: bold; cursor: pointer; font-family: inherit;
+}
+.btn-primary:disabled { background: var(--muted); cursor: not-allowed; }
+
+/* Cart items */
+.cart-item {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.cart-item img, .cart-item .ph {
+  width: 60px; height: 60px; border-radius: 10px;
+  object-fit: cover; flex-shrink: 0;
+  background: var(--card); display: flex; align-items: center;
+  justify-content: center; color: var(--gold);
+}
+.cart-item .meta { flex: 1; min-width: 0; }
+.cart-item .meta h4 { margin: 0 0 4px; font-size: 14px; }
+.cart-item .meta .price { color: var(--gold); font-size: 13px; }
+.cart-item .qty-ctrl button { width: 28px; height: 28px; font-size: 16px; }
+.cart-item .qty-ctrl { gap: 8px; }
+.cart-item .qty-ctrl span { font-size: 14px; min-width: 20px; }
+.cart-total {
+  display: flex; justify-content: space-between;
+  padding: 16px 0; font-size: 16px;
+  border-bottom: 1px solid var(--border); margin-bottom: 16px;
+}
+.cart-total strong { color: var(--gold); font-size: 18px; }
+
+/* Form */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--muted); }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 12px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text);
+  border-radius: 10px; font-family: inherit; font-size: 14px;
+}
+.field textarea { resize: vertical; min-height: 70px; }
+.pay-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pay-option {
+  padding: 14px 10px; border: 2px solid var(--border);
+  border-radius: 10px; text-align: center; cursor: pointer;
+  font-size: 13px; background: var(--card);
+  transition: all .15s;
+}
+.pay-option.active { border-color: var(--gold); background: rgba(245,179,1,.1); }
+.pay-option.disabled { opacity: .4; cursor: not-allowed; }
+.pay-option small { display: block; font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+/* Success */
+.success {
+  text-align: center; padding: 40px 20px;
+}
+.success .icon { font-size: 64px; margin-bottom: 16px; }
+.success h2 { color: var(--gold); margin: 0 0 8px; }
+.success .order-num {
+  display: inline-block; background: var(--gold); color: #000;
+  padding: 8px 20px; border-radius: 30px; font-weight: bold;
+  margin: 12px 0; font-size: 16px;
+}
+.success p { color: var(--muted); line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo" id="logo"><span>☕</span></div>
+    <div class="brand-text">
+      <h1 id="cafeName">کافه</h1>
+      <p>منوی دیجیتال</p>
+    </div>
+  </div>
+  <div class="table-badge" id="tableBadge" style="display:none"></div>
+</header>
+
+<div class="tabs" id="tabs"></div>
+<div class="grid" id="products"></div>
+
+<button class="cart-fab" id="cartFab" onclick="openCart()">
+  <span>🛒 سبد خرید</span>
+  <span class="count" id="cartCount">0</span>
+</button>
+
+<!-- بک‌گراند Sheet -->
+<div class="sheet-bg" id="sheetBg" onclick="closeAll()"></div>
+
+<!-- Sheet: جزئیات محصول -->
+<div class="sheet" id="detailSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <h2>جزئیات</h2>
+    <button class="close-btn" onclick="closeAll()">×</button>
+  </div>
+  <div class="sheet-body" id="detailBody"></div>
+</div>
+
+<!-- Sheet: سبد خرید -->
+<div class="sheet" id="cartSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <h2>سبد خرید</h2>
+    <button class="close-btn" onclick="closeAll()">×</button>
+  </div>
+  <div class="sheet-body" id="cartBody"></div>
+</div>
+
+<!-- Sheet: تسویه -->
+<div class="sheet" id="checkoutSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <h2>تکمیل سفارش</h2>
+    <button class="close-btn" onclick="closeAll()">×</button>
+  </div>
+  <div class="sheet-body" id="checkoutBody"></div>
+</div>
+
+<!-- Sheet: موفقیت -->
+<div class="sheet" id="successSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body" id="successBody"></div>
+</div>
+
+<script src="config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+const sb = createClient(window.SUPABASE_URL, window.SUPABASE_KEY)
+
+let categories = []
+let products = []
+let settings = {}
+let cart = JSON.parse(localStorage.getItem('cafe_cart') || '[]')
+let activeCat = 'all'
+let currentProduct = null
+let currentQty = 1
+
+const tableParam = new URLSearchParams(location.search).get('table') || ''
+
+// ============ LOAD ============
+async function load() {
+  const [catRes, prodRes, setRes] = await Promise.all([
+    sb.from('categories').select('*').order('sort_order'),
+    sb.from('products').select('*').order('sort_order'),
+    sb.from('settings').select('*').eq('id', 1).maybeSingle()
+  ])
+  categories = catRes.data || []
+  products = prodRes.data || []
+  settings = setRes.data || {}
+
+  if (settings.cafe_name) document.getElementById('cafeName').textContent = settings.cafe_name
+  if (settings.logo_url) {
+    document.getElementById('logo').innerHTML = `<img src="${settings.logo_url}" alt="">`
+  }
+  document.title = (settings.cafe_name || 'کافه') + ' — منو'
+
+  if (tableParam) {
+    const b = document.getElementById('tableBadge')
+    b.textContent = 'میز ' + tableParam
+    b.style.display = 'block'
+  }
+
+  renderTabs()
+  renderProducts()
+  updateCartFab()
+}
+
+function renderTabs() {
+  const tabs = document.getElementById('tabs')
+  tabs.innerHTML = `<button class="tab ${activeCat==='all'?'active':''}" data-cat="all">همه</button>` +
+    categories.map(c => `<button class="tab ${activeCat===c.id?'active':''}" data-cat="${c.id}">${c.name}</button>`).join('')
+  tabs.querySelectorAll('.tab').forEach(el => {
+    el.onclick = () => { activeCat = el.dataset.cat === 'all' ? 'all' : +el.dataset.cat; renderTabs(); renderProducts() }
+  })
+}
+
+function renderProducts() {
+  const grid = document.getElementById('products')
+  let list = activeCat === 'all' ? products : products.filter(p => p.category_id === activeCat)
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty">هنوز آیتمی در این دسته ثبت نشده</div>'
+    return
+  }
+  grid.innerHTML = list.map(p => {
+    const inCart = cart.find(c => c.id === p.id)
+    return `
+      <div class="card ${!p.available ? 'unavailable' : ''}" onclick="openDetail(${p.id})">
+        <div class="img-wrap">
+          ${p.image_url
+            ? `<img src="${p.image_url}" alt="" loading="lazy">`
+            : `<div class="ph">☕</div>`}
+          ${!p.available ? '<span class="badge-unavail">ناموجود</span>' : ''}
+        </div>
+        <div class="info">
+          <h3>${p.name}</h3>
+          <p class="desc">${p.description || ''}</p>
+          <div class="bottom">
+            <span class="price">${Number(p.price).toLocaleString('fa-IR')} <small>تومان</small></span>
+            ${p.available ? `<button class="add" onclick="event.stopPropagation(); quickAdd(${p.id})">+</button>` : ''}
+          </div>
+        </div>
+      </div>`
+  }).join('')
+}
+
+// ============ PRODUCT DETAIL ============
+window.openDetail = async (id) => {
+  const p = products.find(x => x.id === id)
+  if (!p) return
+  currentProduct = p
+  currentQty = 1
+  const { data: gallery } = await sb.from('product_images').select('*').eq('product_id', id).order('sort_order')
+  const images = []
+  if (p.image_url) images.push(p.image_url)
+  ;(gallery || []).forEach(g => { if (g.image_url !== p.image_url) images.push(g.image_url) })
+
+  document.getElementById('detailBody').innerHTML = `
+    ${images.length ? `<div class="gallery">${images.map(u => `<img src="${u}">`).join('')}</div>` : ''}
+    <h2 class="product-name">${p.name}</h2>
+    ${p.description ? `<p class="product-desc">${p.description}</p>` : ''}
+    <div class="product-price">${Number(p.price).toLocaleString('fa-IR')} تومان</div>
+    ${p.available ? `
+      <div class="qty-row">
+        <span>تعداد</span>
+        <div class="qty-ctrl">
+          <button onclick="chgQty(-1)">−</button>
+          <span id="qty">1</span>
+          <button onclick="chgQty(1)">+</button>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="addCurrentToCart()">افزودن به سبد</button>
+    ` : `<button class="btn-primary" disabled>ناموجود</button>`}
+  `
+  openSheet('detailSheet')
+}
+
+window.chgQty = (d) => {
+  currentQty = Math.max(1, currentQty + d)
+  document.getElementById('qty').textContent = currentQty
+}
+
+window.addCurrentToCart = () => {
+  addToCart(currentProduct, currentQty)
+  closeAll()
+}
+
+window.quickAdd = (id) => {
+  const p = products.find(x => x.id === id)
+  if (p) addToCart(p, 1)
+}
+
+function addToCart(p, qty = 1) {
+  const existing = cart.find(c => c.id === p.id)
+  if (existing) existing.qty += qty
+  else cart.push({ id: p.id, name: p.name, price: p.price, image_url: p.image_url, qty })
+  saveCart()
+}
+
+function saveCart() {
+  localStorage.setItem('cafe_cart', JSON.stringify(cart))
+  updateCartFab()
+  renderProducts()
+}
+
+function updateCartFab() {
+  const count = cart.reduce((s, c) => s + c.qty, 0)
+  const fab = document.getElementById('cartFab')
+  document.getElementById('cartCount').textContent = count
+  fab.classList.toggle('show', count > 0)
+}
+
+// ============ CART ============
+window.openCart = () => {
+  if (!cart.length) return
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0)
+  document.getElementById('cartBody').innerHTML = `
+    ${cart.map(c => `
+      <div class="cart-item">
+        ${c.image_url ? `<img src="${c.image_url}">` : `<div class="ph">☕</div>`}
+        <div class="meta">
+          <h4>${c.name}</h4>
+          <div class="price">${Number(c.price).toLocaleString('fa-IR')} تومان</div>
+        </div>
+        <div class="qty-ctrl">
+          <button onclick="cartQty(${c.id}, -1)">−</button>
+          <span>${c.qty}</span>
+          <button onclick="cartQty(${c.id}, 1)">+</button>
+        </div>
+      </div>
+    `).join('')}
+    <div class="cart-total">
+      <span>جمع کل</span>
+      <strong>${Number(total).toLocaleString('fa-IR')} تومان</strong>
+    </div>
+    <button class="btn-primary" onclick="openCheckout()">ادامه سفارش</button>
+  `
+  openSheet('cartSheet')
+}
+
+window.cartQty = (id, d) => {
+  const item = cart.find(c => c.id === id)
+  if (!item) return
+  item.qty += d
+  if (item.qty <= 0) cart = cart.filter(c => c.id !== id)
+  saveCart()
+  if (!cart.length) closeAll()
+  else openCart()
+}
+
+// ============ CHECKOUT ============
+window.openCheckout = () => {
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0)
+  document.getElementById('checkoutBody').innerHTML = `
+    <div class="field">
+      <label>شماره میز</label>
+      <input id="cTable" placeholder="مثلاً ۵" value="${tableParam}" ${tableParam ? 'readonly' : ''}>
+    </div>
+    <div class="field">
+      <label>نام شما (اختیاری)</label>
+      <input id="cName" placeholder="نام">
+    </div>
+    <div class="field">
+      <label>شماره تماس (اختیاری)</label>
+      <input id="cPhone" type="tel" placeholder="۰۹...">
+    </div>
+    <div class="field">
+      <label>توضیحات (اختیاری)</label>
+      <textarea id="cNotes" placeholder="مثلاً بدون شکر"></textarea>
+    </div>
+    <div class="field">
+      <label>روش پرداخت</label>
+      <div class="pay-options">
+        <div class="pay-option active" data-pay="cash" onclick="selPay(this)">💵 نقدی<small>پرداخت در محل</small></div>
+        <div class="pay-option" data-pay="card" onclick="selPay(this)">💳 کارت‌خوان<small>پرداخت در محل</small></div>
+        <div class="pay-option" data-pay="online" onclick="selPay(this)">🌐 آنلاین<small>به‌زودی</small></div>
+      </div>
+    </div>
+    <div class="cart-total">
+      <span>مبلغ قابل پرداخت</span>
+      <strong>${Number(total).toLocaleString('fa-IR')} تومان</strong>
+    </div>
+    <button class="btn-primary" id="submitOrder">ثبت سفارش</button>
+  `
+  document.getElementById('submitOrder').onclick = submitOrder
+  openSheet('checkoutSheet')
+}
+
+window.selPay = (el) => {
+  if (el.dataset.pay === 'online') {
+    alert('پرداخت آنلاین هنوز فعال نشده است. لطفاً پرداخت در محل را انتخاب کنید.')
+    return
+  }
+  document.querySelectorAll('.pay-option').forEach(x => x.classList.remove('active'))
+  el.classList.add('active')
+}
+
+async function submitOrder() {
+  const table = document.getElementById('cTable').value.trim()
+  const name = document.getElementById('cName').value.trim()
+  const phone = document.getElementById('cPhone').value.trim()
+  const notes = document.getElementById('cNotes').value.trim()
+  const pay = document.querySelector('.pay-option.active')?.dataset.pay || 'cash'
+
+  if (!table) { alert('لطفاً شماره میز را وارد کنید'); return }
+
+  const btn = document.getElementById('submitOrder')
+  btn.disabled = true
+  btn.textContent = 'در حال ثبت...'
+
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0)
+
+  const { data: order, error } = await sb.from('orders').insert({
+    table_number: table,
+    customer_name: name || null,
+    customer_phone: phone || null,
+    notes: notes || null,
+    total,
+    payment_method: pay,
+    payment_status: 'pending',
+    status: 'new'
+  }).select().single()
+
+  if (error) {
+    alert('خطا در ثبت سفارش: ' + error.message)
+    btn.disabled = false
+    btn.textContent = 'ثبت سفارش'
+    return
+  }
+
+  await sb.from('order_items').insert(
+    cart.map(c => ({
+      order_id: order.id,
+      product_id: c.id,
+      name: c.name,
+      price: c.price,
+      quantity: c.qty
+    }))
+  )
+
+  cart = []
+  saveCart()
+
+  document.getElementById('successBody').innerHTML = `
+    <div class="success">
+      <div class="icon">✅</div>
+      <h2>سفارش شما ثبت شد</h2>
+      <div class="order-num">شماره سفارش: ${order.id}</div>
+      <p>میز ${table}<br>مبلغ: ${Number(total).toLocaleString('fa-IR')} تومان<br>
+      روش پرداخت: ${pay === 'cash' ? 'نقدی در محل' : pay === 'card' ? 'کارت‌خوان' : 'آنلاین'}</p>
+      <p style="margin-top:20px">سفارش شما در حال آماده‌سازی است 🍵</p>
+      <button class="btn-primary" style="margin-top:20px" onclick="location.reload()">سفارش جدید</button>
+    </div>
+  `
+  openSheet('successSheet')
+}
+
+// ============ SHEET HELPERS ============
+function openSheet(id) {
+  document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'))
+  document.getElementById(id).classList.add('open')
+  document.getElementById('sheetBg').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+
+window.closeAll = () => {
+  document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'))
+  document.getElementById('sheetBg').classList.remove('open')
+  document.body.style.overflow = ''
+}
+
+load()
+</script>
+</body>
+</html>
