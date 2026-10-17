@@ -1,2 +1,0 @@
-window.SUPABASE_URL = "https://jmejqxnxfyovvkzwyguf.supabase.co/rest/v1/";
-window.SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptZWpxeG54ZnlvdnZrend5Z3VmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMTc4NDMsImV4cCI6MjEwNzc5Mzg0M30.C6Kywvc1NnyOR3jkn7QbaV3aRxlFlyqnCOWAitSRcRQ";
